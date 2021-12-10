@@ -28,11 +28,12 @@ const getTask = async(req,res) => {
     //res.status('Get task');
 };
 
+//Patch- Update Task
 const updateTask = async(req,res) => {
-    console.log(req.params)
+    console.log(req.body)
     try {
-        const task = await Task.findByIdAndUpdate(req.body)
-        // const task = await Task.findByIdAndUpdate(req.params.id, {name: req.params.name, completed: req.params.completed})
+        // const task = await Task.findByIdAndUpdate(req.body)
+        const task = await Task.findByIdAndUpdate(req.params.id, {name: req.body.name, completed: req.body.completed})
         res.status(200).json({task})
     } catch(error) {
         res.status(500).json();
