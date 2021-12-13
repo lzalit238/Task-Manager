@@ -8,6 +8,7 @@ const showTasks = async ()=> {
     loadingDOM.style.visibility = "visible"
     try {
         const {data : {tasks}, } = await axios.get("/api/v1/tasks")
+        console.log(tasks)
         if(tasks.length < 1) {
             tasksDOM.innerHTML = '<h5 class = "empty-list" > no tests in your list </h5>'
             loadingDOM.style.visibility = "hidden"
@@ -15,23 +16,23 @@ const showTasks = async ()=> {
         }
         const allTasks = tasks.map((task)=> {
             const{completed, _id: taskID, name} = task;
-            return `<div class="single-task" ${completed && "task-completed"}> 
-            <h5><span><i class="far fa-check-circle"></i></span>${name}</h5>
-            <div class="task-links">
-            <!-- edit link -->
-            <a href="task.html?id=${taskID}" class="edit-link">
-            <i class="fas fa edit"></i>
-            </a>
-            <!-- delete btn -->
-            <button type="button" class="delete-btn" data-id="${taskID}">
-            <i class="fas fa-trash"></i>
-            </button>
-            </div>
+            return `<div class="single-task ${completed && "task-completed"}"> 
+                <h5><span><i class="far fa-check-circle"></i></span>${name}</h5>
+                <div class="task-links"></div>
+                <!-- edit link -->
+                    <a href="task.html?id=${taskID}" class="edit-link">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                <!-- delete btn -->
+                    <button type="button" class="delete-btn" data-id="${taskID}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>`;
         }).join("");
         tasksDOM.innerHTML = allTasks;
     } catch(error){
-        tasksDOM.innerHTML = `<h5 class="empty-list">there was a <b>PANCAKE</b>, please try again later...${error}</h5>`
+        tasksDOM.innerHTML = `<h5 class="empty-list">there was a <b>error</b>, please try again later...${error}</h5>`
     }
     loadingDOM.style.visibility = "hidden"
 };
@@ -46,7 +47,7 @@ tasksDOM.addEventListener("click", async (e) => {
         loadingDOM.style.visibility = "visible"
         const id = el.parentElement.dataset.id;
         try{
-            await axios.delete(`/api/tasks/${id}`);
+            await axios.delete(`http://localhost:3000/api/v1/tasks/${id}`);
             showTasks();
         } catch(error){
             console.log(error)
@@ -69,7 +70,7 @@ formDOM.addEventListener("submit", async (e) => {
         formAlertDOM.classList.add("text-success")
     } catch(error){
         formAlertDOM.style.display = "block"
-        formAlertDOM.innerHTML = "PANCAKE please try again"
+        formAlertDOM.innerHTML = "Error please try again"
     }
     setTimeout(()=>{
         formAlertDOM.style.display = "none"

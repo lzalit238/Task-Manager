@@ -1,4 +1,4 @@
-const e = require("express");
+// const e = require("express");
 
 const taskIDDOM = document.querySelector('.task-edit-id');
 const taskNameDOM = document.querySelector('.task-edit-name');
@@ -12,7 +12,7 @@ let tempName;
 
 const showTask = async () => {
     try {
-        const { data: { task }, } = await axios.get('/api/v1/tasks/${id}');
+        const { data: { task }, } = await axios.get(`http://localhost:3000/api/v1/tasks/${id}`);
         const { _id: taskID, completed, name } = task;
 
         taskIDDOM.textContent = taskID;
@@ -27,14 +27,14 @@ const showTask = async () => {
 };
 showTask();
 
-editFormDOM.addEventListener('submit', async() => {
+editFormDOM.addEventListener('submit', async(e) => {
     editBtnDOM.textContent = 'Loading...';
     e.preventDefault();
     try {
         const taskName = taskNameDOM.value;
         const taskCompleted = taskCompleteDOM.checked;
 
-        const { data: {task}, } = await axios('/api/v1/tasks/${id}', {
+        const { data: {task}, } = await axios.patch(`http://localhost:3000/api/v1/tasks/${id}`, {
             name: taskName, completed: taskCompleted
         });
         const { _id: taskId, completed, name } = task;
